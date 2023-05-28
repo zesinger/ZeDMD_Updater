@@ -1,7 +1,7 @@
 # ZeDMD_Updater
 A simple to use installer/updater for your ZeDMD:
 
-![ZeDMD_Updater]([http://url/to/img.png](https://i.servimg.com/u/f88/17/72/22/03/scree294.png))
+![]([http://url/to/img.png](https://i.servimg.com/u/f88/17/72/22/03/scree294.png))
 
 Everything is automatic:
 
