@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33627.172
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeDMD_Updater", "ZeDMD_Updater.csproj", "{94C31F4B-B7B2-4049-A390-9FBAD3704F53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94C31F4B-B7B2-4049-A390-9FBAD3704F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94C31F4B-B7B2-4049-A390-9FBAD3704F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94C31F4B-B7B2-4049-A390-9FBAD3704F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94C31F4B-B7B2-4049-A390-9FBAD3704F53}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1159116C-C986-4900-B940-F14B7BE661E4}
+	EndGlobalSection
+EndGlobal
