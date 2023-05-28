@@ -5,6 +5,7 @@ A simple to use installer/updater for your ZeDMD:
 
 Everything is automatic:
 
+- automatic detection of new device connected while program is running
 - automatic detection of the latest version available in the Github ZeDMD Installer/Updater
 - automatic detection of the ESP32 with no ZeDMD firmware connected in the left listbox (caution, if the ESP32 is not listed, chances are that the device drivers are not installed, I suggest you read this post https://www.esp32.com/viewtopic.php?t=5841 and mainly the answer given by herbert@vitzthum.at)
 - automatic detection of the ZeDMD device connected in the center listbox with their format "ZeDMD" or "ZeDMD HD" and installed firmware version, green ones have the latest firmware, red ones may be updated to the latest firmware
