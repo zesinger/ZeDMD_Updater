@@ -45,8 +45,6 @@ namespace ZeDMD_Updater
         int nZeDMDCOMs =0;
         int selCOM=0;
         bool is64=false;
-        bool isBKeep=true;
-        bool isOKeep=true;
         bool isFlashing=false;
         ManagementEventWatcher watcher;
         private int IsZeDMD(int nocom)
@@ -507,7 +505,6 @@ namespace ZeDMD_Updater
             if (BKeep.Checked==true)
             {
                 BVal.Enabled = false;
-                isBKeep=true;
             }
         }
 
@@ -516,7 +513,6 @@ namespace ZeDMD_Updater
             if (BSet.Checked==true)
             {
                 BVal.Enabled = true;
-                isBKeep=false;
             }
         }
 
@@ -525,7 +521,6 @@ namespace ZeDMD_Updater
             if (OKeep.Checked==true)
             {
                 OVal.Enabled = false;
-                isOKeep=true;
             }
         }
 
@@ -534,7 +529,6 @@ namespace ZeDMD_Updater
             if (OSet.Checked==true)
             {
                 OVal.Enabled = true;
-                isOKeep=false;
             }
         }
     }
