@@ -14,12 +14,16 @@ using System.Text;
 using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 using System.Threading;
+using System.Runtime.CompilerServices;
 
 namespace ZeDMD_Updater
 {
     public partial class Form1 : Form
     {
- 		public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
+ 		private const int MAJ_VERSION=1;
+        private const int MIN_VERSION=1;
+
+        public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
         const int MAX_VERSIONS_TO_LIST=64;
         ZeDMDComm zdc=new ZeDMDComm(); 
         int[] ESP32COMs=new int[64];
@@ -41,6 +45,9 @@ namespace ZeDMD_Updater
         int nZeDMDCOMs =0;
         int selCOM=0;
         bool is64=false;
+        bool isBKeep=true;
+        bool isOKeep=true;
+        bool isFlashing=false;
         ManagementEventWatcher watcher;
         private int IsZeDMD(int nocom)
         {
@@ -90,12 +97,15 @@ namespace ZeDMD_Updater
             Start.Text="";
             Start.Enabled=false;
         }
-        private void PopulateESP()
+        private void PopulateESP(bool settext)
         {
-            ESP32List.Items.Clear();
-            ESP32List.Items.Add("Please wait...");
-            ZeDMDList.Items.Clear();
-            ZeDMDList.Items.Add("... updating");
+            if (settext)
+            {
+                ESP32List.Items.Clear();
+                ESP32List.Items.Add("Please wait...");
+                ZeDMDList.Items.Clear();
+                ZeDMDList.Items.Add("... updating");
+            }
             Start.Enabled = false;
             nESP32COMs=0;
             nZeDMDCOMs=0;
@@ -139,16 +149,20 @@ namespace ZeDMD_Updater
                     e.DrawBackground();
                 }
                 string itemText = ZeDMDList.Items[e.Index].ToString();
-                if ((majVersion[e.Index]==avmajVersion)&&(minVersion[e.Index]==avminVersion)&&(patVersion[e.Index]==avpatVersion))
+                if (!isFlashing)
                 {
-                    // Get the text and background color for the current item
-                    e.Graphics.DrawString(itemText, e.Font, Brushes.Green, e.Bounds);
+                    if ((majVersion[e.Index]==avmajVersion)&&(minVersion[e.Index]==avminVersion)&&(patVersion[e.Index]==avpatVersion))
+                    {
+                        // Get the text and background color for the current item
+                        e.Graphics.DrawString(itemText, e.Font, Brushes.Green, e.Bounds);
+                    }
+                    else
+                    {
+                        // Get the text and background color for the current item
+                        e.Graphics.DrawString(itemText, e.Font, Brushes.Red, e.Bounds);
+                    }
                 }
-                else
-                {
-                    // Get the text and background color for the current item
-                    e.Graphics.DrawString(itemText, e.Font, Brushes.Red, e.Bounds);
-                }
+                else e.Graphics.DrawString(itemText, e.Font, Brushes.Black, e.Bounds);
             };
         }
 
@@ -275,7 +289,7 @@ namespace ZeDMD_Updater
                 if (!WatcherPaused)
                 {
                     WatcherPaused = true;
-                    PopulateESP();
+                    PopulateESP(true);
                     StopWatcher();
                     StartWatcher();
                     WatcherPaused = false;
@@ -284,8 +298,9 @@ namespace ZeDMD_Updater
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            PopulateESP();
+            PopulateESP(true);
             StartWatcher();
+            this.Text="ZeDMD Installer/Updater v"+MAJ_VERSION.ToString()+"."+MIN_VERSION.ToString()+" by Zedrummer";
         }
         public Form1()
         {
@@ -297,6 +312,16 @@ namespace ZeDMD_Updater
             LatestVersion.Text="Latest version available: "+avmajVersion.ToString()+"."+avminVersion.ToString()+"."+avpatVersion.ToString();
             this.Load+=Form1_Load;
             PopulateVersions();
+            BVal.Items.Clear();
+            for (int ti=1;ti<16;ti++) BVal.Items.Add(ti.ToString());
+            BVal.SelectedIndex=0;
+            BKeep.Checked=true;
+            BVal.Enabled=false;
+            OVal.Items.Clear();
+            for (int ti=0;ti<6;ti++) OVal.Items.Add(ti.ToString());
+            OVal.SelectedIndex=0;
+            OKeep.Checked=true;
+            OVal.Enabled=false;
         }
 
         private void ZeDMDList_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -375,6 +400,7 @@ namespace ZeDMD_Updater
 
         private void Start_Click(object sender, System.EventArgs e)
         {
+            isFlashing=true;
             int zednum=ZeDMDList.SelectedIndex;
             int vernum=versionList.SelectedIndex;
             if (vernum<0) return;
@@ -383,8 +409,11 @@ namespace ZeDMD_Updater
             Start.Enabled = false;
             ESP32List.Items.Clear();
             ESP32List.Items.Add("Please wait...");
+            ESP32List.Items.Add("... flashing");
             ZeDMDList.Items.Clear();
-            ZeDMDList.Items.Add("... flashing");
+            ZeDMDList.Items.Add("Don't disconnect...");
+            ZeDMDList.Items.Add("... any device before...");
+            ZeDMDList.Items.Add("... these boxes are updated");
             WatcherPaused=true;
             string zipFileUrl;
             if (is64) zipFileUrl= "https://github.com/PPUC/ZeDMD/releases/download/"+strVersion+"/ZeDMD-256x64.zip";
@@ -429,7 +458,13 @@ namespace ZeDMD_Updater
                                         MessageBox.Show("The flashing failed. ESP32 are known to have an issue while flashing at connection time, retry pushing the ESP32 'BOOT' button during the connection", "Failed");
                                     }
                                     else if (zednum!=-1)
-                                        zdc.SetRGBOrderAndBrightness(selCOM,brightness[zednum],RGBorder[zednum]);
+                                    {
+                                        byte brig=brightness[zednum];
+                                        byte rgbo=RGBorder[zednum];
+                                        if (BSet.Checked==true) brig=(byte)(1+BVal.SelectedIndex);
+                                        if (OSet.Checked==true) rgbo=(byte)(OVal.SelectedIndex);
+                                        zdc.SetRGBOrderAndBrightness(selCOM,brig,rgbo);
+                                    }
                                 }
                                 System.IO.File.Delete(filePath);
                             }
@@ -438,7 +473,8 @@ namespace ZeDMD_Updater
                     }
                 }
             }
-            PopulateESP();
+            isFlashing=false;
+            PopulateESP(false);
             //versionList.SelectedIndex = 0;
             WatcherPaused=false;
         }
@@ -464,6 +500,42 @@ namespace ZeDMD_Updater
         private void versionList_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateStartButton();
+        }
+
+        private void BKeep_CheckedChanged(object sender, EventArgs e)
+        {
+            if (BKeep.Checked==true)
+            {
+                BVal.Enabled = false;
+                isBKeep=true;
+            }
+        }
+
+        private void BSet_CheckedChanged(object sender, EventArgs e)
+        {
+            if (BSet.Checked==true)
+            {
+                BVal.Enabled = true;
+                isBKeep=false;
+            }
+        }
+
+        private void OKeep_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OKeep.Checked==true)
+            {
+                OVal.Enabled = false;
+                isOKeep=true;
+            }
+        }
+
+        private void OSet_CheckedChanged(object sender, EventArgs e)
+        {
+            if (OSet.Checked==true)
+            {
+                OVal.Enabled = true;
+                isOKeep=false;
+            }
         }
     }
 }
