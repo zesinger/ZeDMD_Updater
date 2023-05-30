@@ -24,9 +24,6 @@ namespace ZeDMD_Updater
 
         #region Code généré par le Concepteur Windows Form
 
-        private const int MAJ_VERSION=1;
-        private const int MIN_VERSION=1;
-
         /// <summary>
         /// Méthode requise pour la prise en charge du concepteur - ne modifiez pas
         /// le contenu de cette méthode avec l'éditeur de code.
@@ -43,6 +40,18 @@ namespace ZeDMD_Updater
             this.ZeDMDList = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.versionList = new System.Windows.Forms.ListBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.BSet = new System.Windows.Forms.RadioButton();
+            this.BKeep = new System.Windows.Forms.RadioButton();
+            this.BVal = new System.Windows.Forms.ComboBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.OVal = new System.Windows.Forms.ComboBox();
+            this.OSet = new System.Windows.Forms.RadioButton();
+            this.OKeep = new System.Windows.Forms.RadioButton();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -70,7 +79,7 @@ namespace ZeDMD_Updater
             // Start
             // 
             this.Start.Enabled = false;
-            this.Start.Location = new System.Drawing.Point(219, 210);
+            this.Start.Location = new System.Drawing.Point(161, 265);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(187, 23);
             this.Start.TabIndex = 4;
@@ -81,7 +90,7 @@ namespace ZeDMD_Updater
             // SD
             // 
             this.SD.AutoSize = true;
-            this.SD.Location = new System.Drawing.Point(13, 213);
+            this.SD.Location = new System.Drawing.Point(6, 19);
             this.SD.Name = "SD";
             this.SD.Size = new System.Drawing.Size(63, 17);
             this.SD.TabIndex = 8;
@@ -93,7 +102,7 @@ namespace ZeDMD_Updater
             // HD
             // 
             this.HD.AutoSize = true;
-            this.HD.Location = new System.Drawing.Point(81, 213);
+            this.HD.Location = new System.Drawing.Point(75, 19);
             this.HD.Name = "HD";
             this.HD.Size = new System.Drawing.Size(82, 17);
             this.HD.TabIndex = 9;
@@ -147,27 +156,135 @@ namespace ZeDMD_Updater
             this.versionList.FormattingEnabled = true;
             this.versionList.Location = new System.Drawing.Point(423, 44);
             this.versionList.Name = "versionList";
-            this.versionList.Size = new System.Drawing.Size(95, 186);
+            this.versionList.Size = new System.Drawing.Size(95, 160);
             this.versionList.TabIndex = 14;
             this.versionList.SelectedIndexChanged += new System.EventHandler(this.versionList_SelectedIndexChanged);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.HD);
+            this.groupBox1.Controls.Add(this.SD);
+            this.groupBox1.Location = new System.Drawing.Point(10, 213);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(163, 44);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Panel resolution";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.BVal);
+            this.groupBox2.Controls.Add(this.BSet);
+            this.groupBox2.Controls.Add(this.BKeep);
+            this.groupBox2.Location = new System.Drawing.Point(190, 213);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(149, 44);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Brightness";
+            // 
+            // BSet
+            // 
+            this.BSet.AutoSize = true;
+            this.BSet.Location = new System.Drawing.Point(65, 19);
+            this.BSet.Name = "BSet";
+            this.BSet.Size = new System.Drawing.Size(41, 17);
+            this.BSet.TabIndex = 9;
+            this.BSet.TabStop = true;
+            this.BSet.Text = "Set";
+            this.BSet.UseVisualStyleBackColor = true;
+            this.BSet.CheckedChanged += new System.EventHandler(this.BSet_CheckedChanged);
+            // 
+            // BKeep
+            // 
+            this.BKeep.AutoSize = true;
+            this.BKeep.Location = new System.Drawing.Point(9, 20);
+            this.BKeep.Name = "BKeep";
+            this.BKeep.Size = new System.Drawing.Size(50, 17);
+            this.BKeep.TabIndex = 8;
+            this.BKeep.TabStop = true;
+            this.BKeep.Text = "Keep";
+            this.BKeep.UseVisualStyleBackColor = true;
+            this.BKeep.CheckedChanged += new System.EventHandler(this.BKeep_CheckedChanged);
+            // 
+            // BVal
+            // 
+            this.BVal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BVal.FormattingEnabled = true;
+            this.BVal.Location = new System.Drawing.Point(103, 17);
+            this.BVal.Name = "BVal";
+            this.BVal.Size = new System.Drawing.Size(40, 21);
+            this.BVal.TabIndex = 10;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.OVal);
+            this.groupBox3.Controls.Add(this.OSet);
+            this.groupBox3.Controls.Add(this.OKeep);
+            this.groupBox3.Location = new System.Drawing.Point(369, 215);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(149, 44);
+            this.groupBox3.TabIndex = 17;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "RGB order";
+            // 
+            // OVal
+            // 
+            this.OVal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.OVal.FormattingEnabled = true;
+            this.OVal.Location = new System.Drawing.Point(103, 17);
+            this.OVal.Name = "OVal";
+            this.OVal.Size = new System.Drawing.Size(40, 21);
+            this.OVal.TabIndex = 10;
+            // 
+            // OSet
+            // 
+            this.OSet.AutoSize = true;
+            this.OSet.Location = new System.Drawing.Point(65, 19);
+            this.OSet.Name = "OSet";
+            this.OSet.Size = new System.Drawing.Size(41, 17);
+            this.OSet.TabIndex = 9;
+            this.OSet.TabStop = true;
+            this.OSet.Text = "Set";
+            this.OSet.UseVisualStyleBackColor = true;
+            this.OSet.CheckedChanged += new System.EventHandler(this.OSet_CheckedChanged);
+            // 
+            // OKeep
+            // 
+            this.OKeep.AutoSize = true;
+            this.OKeep.Location = new System.Drawing.Point(6, 19);
+            this.OKeep.Name = "OKeep";
+            this.OKeep.Size = new System.Drawing.Size(50, 17);
+            this.OKeep.TabIndex = 8;
+            this.OKeep.TabStop = true;
+            this.OKeep.Text = "Keep";
+            this.OKeep.UseVisualStyleBackColor = true;
+            this.OKeep.CheckedChanged += new System.EventHandler(this.OKeep_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 246);
+            this.ClientSize = new System.Drawing.Size(531, 300);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.versionList);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.ZeDMDList);
             this.Controls.Add(this.ESP32List);
             this.Controls.Add(this.LatestVersion);
-            this.Controls.Add(this.HD);
-            this.Controls.Add(this.SD);
             this.Controls.Add(this.Start);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
-            this.Text = "ZeDMD Installer/Updater v"+Form1.MAJ_VERSION.ToString()+"."+Form1.MIN_VERSION.ToString()+" by Zedrummer";
+            this.Text = "ZeDMD Installer/Updater v1.0 by Zedrummer";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +302,15 @@ namespace ZeDMD_Updater
         public System.Windows.Forms.ListBox ZeDMDList;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.ListBox versionList;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ComboBox BVal;
+        private System.Windows.Forms.RadioButton BSet;
+        private System.Windows.Forms.RadioButton BKeep;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ComboBox OVal;
+        private System.Windows.Forms.RadioButton OSet;
+        private System.Windows.Forms.RadioButton OKeep;
     }
 }
 
