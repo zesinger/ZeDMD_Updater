@@ -262,6 +262,7 @@ namespace ZeDMD
 						coms[ncoms]=int.Parse(comNumberString.Substring(3));
 						ncoms++;
 					}
+					SendFunctionSet(31, 0, retdata); 
 				}
 				Close();
 			}

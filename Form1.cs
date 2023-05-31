@@ -21,7 +21,7 @@ namespace ZeDMD_Updater
     public partial class Form1 : Form
     {
  		private const int MAJ_VERSION=1;
-        private const int MIN_VERSION=1;
+        private const int MIN_VERSION=2;
 
         public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
         const int MAX_VERSIONS_TO_LIST=64;
@@ -459,6 +459,14 @@ namespace ZeDMD_Updater
                                     {
                                         byte brig=brightness[zednum];
                                         byte rgbo=RGBorder[zednum];
+                                        if (BSet.Checked==true) brig=(byte)(1+BVal.SelectedIndex);
+                                        if (OSet.Checked==true) rgbo=(byte)(OVal.SelectedIndex);
+                                        zdc.SetRGBOrderAndBrightness(selCOM,brig,rgbo);
+                                    }
+                                    else
+                                    {
+                                        byte brig=1;
+                                        byte rgbo=0;
                                         if (BSet.Checked==true) brig=(byte)(1+BVal.SelectedIndex);
                                         if (OSet.Checked==true) rgbo=(byte)(OVal.SelectedIndex);
                                         zdc.SetRGBOrderAndBrightness(selCOM,brig,rgbo);
