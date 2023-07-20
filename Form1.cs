@@ -21,7 +21,7 @@ namespace ZeDMD_Updater
     public partial class Form1 : Form
     {
  		private const int MAJ_VERSION=1;
-        private const int MIN_VERSION=2;
+        private const int MIN_VERSION=3;
 
         public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
         const int MAX_VERSIONS_TO_LIST=64;
@@ -47,6 +47,7 @@ namespace ZeDMD_Updater
         bool is64=false;
         bool isFlashing=false;
         ManagementEventWatcher watcher;
+        private string[] USBtoSerialDevices = { "CP210x", "CH340", "CH9102"};
         private int IsZeDMD(int nocom)
         {
             for (int ti=0;ti<nZeDMDCOMs;ti++)
@@ -67,15 +68,19 @@ namespace ZeDMD_Updater
             
                 for (int tj=0;tj<portList.Count;tj++)
                 {
-                    if (portList[tj].Contains("CP210x")||portList[tj].Contains("CH340"))
+                    foreach (string name in USBtoSerialDevices)
                     {
-				        Match match = Regex.Match(portList[tj], @"COM(\d+)");
-					    if (match.Success)
-					    {
-						    string comNumberString = match.Groups[0].Value;
-						    ESP32COMs[nESP32COMs]=int.Parse(comNumberString.Substring(3));
-						    nESP32COMs++;
-					    }
+                        if (portList[tj].Contains(name))
+                        {
+                            Match match = Regex.Match(portList[tj], @"COM(\d+)");
+                            if (match.Success)
+                            {
+                                string comNumberString = match.Groups[0].Value;
+                                ESP32COMs[nESP32COMs] = int.Parse(comNumberString.Substring(3));
+                                nESP32COMs++;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -181,7 +186,7 @@ namespace ZeDMD_Updater
                         isAvailable = response.StatusCode == HttpStatusCode.OK;
                     }
                 }
-                catch (WebException ex)
+                catch
                 {
                     // Handle exceptions, e.g., request timed out or failed
                     // You can log the exception or take appropriate action
