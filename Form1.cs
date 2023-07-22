@@ -15,13 +15,14 @@ using System.Text.RegularExpressions;
 using static System.Net.WebRequestMethods;
 using System.Threading;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace ZeDMD_Updater
 {
     public partial class Form1 : Form
     {
  		private const int MAJ_VERSION=1;
-        private const int MIN_VERSION=3;
+        private const int MIN_VERSION=4;
 
         public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
         const int MAX_VERSIONS_TO_LIST=64;
@@ -107,17 +108,20 @@ namespace ZeDMD_Updater
                 ESP32List.Items.Clear();
                 ESP32List.Items.Add("Please wait...");
                 ZeDMDList.Items.Clear();
+                LEDTest.Enabled = false;
                 ZeDMDList.Items.Add("... updating");
             }
             Start.Enabled = false;
             nESP32COMs=0;
             nZeDMDCOMs=0;
-            GetPortNames();
             int width=128;
 			for (uint ti=0;ti<64;ti++) ZeDMDCOMs[ti]=0;
+            Thread.Sleep(500);
+            GetPortNames();
             zdc.Open(out width, ref ZeDMDH,out nZeDMDCOMs,ref ZeDMDCOMs,ref majVersion,ref minVersion,ref patVersion,ref brightness,ref RGBorder);
             ESP32List.Items.Clear();
             ZeDMDList.Items.Clear();
+            LEDTest.Enabled = false;
             for (uint ti=0; ti<nESP32COMs; ti++)
             {
                 int zedmdpos = IsZeDMD(ESP32COMs[ti]);
@@ -329,8 +333,13 @@ namespace ZeDMD_Updater
 
         private void ZeDMDList_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            if (ZeDMDList.SelectedIndex==-1) return;
-			Match match = Regex.Match(ZeDMDList.Text, @"COM(\d+)");
+            if (ZeDMDList.SelectedIndex == -1)
+            {
+                this.LEDTest.Enabled = false;
+                return;
+            }
+            this.LEDTest.Enabled = true;
+            Match match = Regex.Match(ZeDMDList.Text, @"COM(\d+)");
 			if (match.Success)
 			{
 				string comNumberString = match.Groups[0].Value;
@@ -400,20 +409,53 @@ namespace ZeDMD_Updater
             }
             return true;
         }
-
+        private void DisableAll()
+        {
+            LEDTest.Enabled = false;
+            Start.Enabled = false;
+            ZeDMDList.Enabled = false;
+            ESP32List.Enabled = false;
+            SD.Enabled = false;
+            HD.Enabled = false;
+            BKeep.Enabled = false;
+            BSet.Enabled = false;
+            BVal.Enabled = false;
+            OKeep.Enabled = false;
+            OSet.Enabled = false;
+            OVal.Enabled = false;
+            versionList.Enabled = false;
+        }
+        private void EnableAll()
+        {
+            LEDTest.Enabled = true;
+            Start.Enabled = true;
+            ZeDMDList.Enabled = true;
+            ESP32List.Enabled = true;
+            SD.Enabled = true;
+            HD.Enabled = true;
+            BKeep.Enabled = true;
+            BSet.Enabled = true;
+            BVal.Enabled = true;
+            OKeep.Enabled = true;
+            OSet.Enabled = true;
+            OVal.Enabled = true;
+            versionList.Enabled = true;
+        }
         private void Start_Click(object sender, System.EventArgs e)
         {
             isFlashing=true;
             int zednum=ZeDMDList.SelectedIndex;
             int vernum=versionList.SelectedIndex;
             if (vernum<0) return;
-            vernum=navVersions-vernum-1;
+            DisableAll();
+            vernum = navVersions-vernum-1;
             string strVersion="v"+avMVersion[vernum].ToString()+"."+avmVersion[vernum].ToString()+"."+avpVersion[vernum].ToString();
             Start.Enabled = false;
             ESP32List.Items.Clear();
             ESP32List.Items.Add("Please wait...");
             ESP32List.Items.Add("... flashing");
             ZeDMDList.Items.Clear();
+            LEDTest.Enabled = false;
             ZeDMDList.Items.Add("Don't disconnect...");
             ZeDMDList.Items.Add("... any device before...");
             ZeDMDList.Items.Add("... these boxes are updated");
@@ -488,6 +530,7 @@ namespace ZeDMD_Updater
             PopulateESP(false);
             //versionList.SelectedIndex = 0;
             WatcherPaused=false;
+            EnableAll();
         }
 
         private void SD_CheckedChanged(object sender, EventArgs e)
@@ -543,6 +586,27 @@ namespace ZeDMD_Updater
             {
                 OVal.Enabled = true;
             }
+        }
+
+        private void LEDTest_Click(object sender, EventArgs e)
+        {
+            int zednum = ZeDMDList.SelectedIndex;
+            if (zednum < 0)
+            {
+                LEDTest.Enabled = false;
+                return;
+            }
+            int w = 0, h = 0;
+            DisableAll();
+            bool isAvailable = zdc.Connect("COM" + ESP32COMs[zednum].ToString(), out w, out h);
+            byte[] data = new byte[1];
+            if (isAvailable)
+            {
+                zdc.SendFunctionSet(16, 0, data);
+                zdc.Close();
+                Thread.Sleep(3000);
+            }
+            EnableAll();
         }
     }
 }

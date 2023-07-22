@@ -42,13 +42,14 @@ namespace ZeDMD_Updater
             this.versionList = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.BVal = new System.Windows.Forms.ComboBox();
             this.BSet = new System.Windows.Forms.RadioButton();
             this.BKeep = new System.Windows.Forms.RadioButton();
-            this.BVal = new System.Windows.Forms.ComboBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.OVal = new System.Windows.Forms.ComboBox();
             this.OSet = new System.Windows.Forms.RadioButton();
             this.OKeep = new System.Windows.Forms.RadioButton();
+            this.LEDTest = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -79,7 +80,7 @@ namespace ZeDMD_Updater
             // Start
             // 
             this.Start.Enabled = false;
-            this.Start.Location = new System.Drawing.Point(161, 265);
+            this.Start.Location = new System.Drawing.Point(325, 265);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(187, 23);
             this.Start.TabIndex = 4;
@@ -183,6 +184,15 @@ namespace ZeDMD_Updater
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Brightness";
             // 
+            // BVal
+            // 
+            this.BVal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.BVal.FormattingEnabled = true;
+            this.BVal.Location = new System.Drawing.Point(103, 17);
+            this.BVal.Name = "BVal";
+            this.BVal.Size = new System.Drawing.Size(40, 21);
+            this.BVal.TabIndex = 10;
+            // 
             // BSet
             // 
             this.BSet.AutoSize = true;
@@ -206,15 +216,6 @@ namespace ZeDMD_Updater
             this.BKeep.Text = "Keep";
             this.BKeep.UseVisualStyleBackColor = true;
             this.BKeep.CheckedChanged += new System.EventHandler(this.BKeep_CheckedChanged);
-            // 
-            // BVal
-            // 
-            this.BVal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.BVal.FormattingEnabled = true;
-            this.BVal.Location = new System.Drawing.Point(103, 17);
-            this.BVal.Name = "BVal";
-            this.BVal.Size = new System.Drawing.Size(40, 21);
-            this.BVal.TabIndex = 10;
             // 
             // groupBox3
             // 
@@ -261,11 +262,23 @@ namespace ZeDMD_Updater
             this.OKeep.UseVisualStyleBackColor = true;
             this.OKeep.CheckedChanged += new System.EventHandler(this.OKeep_CheckedChanged);
             // 
+            // LEDTest
+            // 
+            this.LEDTest.Enabled = false;
+            this.LEDTest.Location = new System.Drawing.Point(16, 265);
+            this.LEDTest.Name = "LEDTest";
+            this.LEDTest.Size = new System.Drawing.Size(187, 23);
+            this.LEDTest.TabIndex = 18;
+            this.LEDTest.Text = "LED test";
+            this.LEDTest.UseVisualStyleBackColor = true;
+            this.LEDTest.Click += new System.EventHandler(this.LEDTest_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(531, 300);
+            this.Controls.Add(this.LEDTest);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -311,6 +324,7 @@ namespace ZeDMD_Updater
         private System.Windows.Forms.ComboBox OVal;
         private System.Windows.Forms.RadioButton OSet;
         private System.Windows.Forms.RadioButton OKeep;
+        private System.Windows.Forms.Button LEDTest;
     }
 }
 
