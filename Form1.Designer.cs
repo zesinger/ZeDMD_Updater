@@ -50,6 +50,9 @@ namespace ZeDMD_Updater
             this.OSet = new System.Windows.Forms.RadioButton();
             this.OKeep = new System.Windows.Forms.RadioButton();
             this.LEDTest = new System.Windows.Forms.Button();
+            this.wifi = new System.Windows.Forms.CheckBox();
+            this.esps3 = new System.Windows.Forms.CheckBox();
+            this.sevenbit = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -80,7 +83,7 @@ namespace ZeDMD_Updater
             // Start
             // 
             this.Start.Enabled = false;
-            this.Start.Location = new System.Drawing.Point(325, 265);
+            this.Start.Location = new System.Drawing.Point(408, 284);
             this.Start.Name = "Start";
             this.Start.Size = new System.Drawing.Size(187, 23);
             this.Start.TabIndex = 4;
@@ -147,7 +150,7 @@ namespace ZeDMD_Updater
             this.textBox3.Location = new System.Drawing.Point(423, 13);
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(95, 20);
+            this.textBox3.Size = new System.Drawing.Size(172, 20);
             this.textBox3.TabIndex = 13;
             this.textBox3.Text = "Available versions:";
             this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -163,11 +166,12 @@ namespace ZeDMD_Updater
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.esps3);
             this.groupBox1.Controls.Add(this.HD);
             this.groupBox1.Controls.Add(this.SD);
             this.groupBox1.Location = new System.Drawing.Point(10, 213);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(163, 44);
+            this.groupBox1.Size = new System.Drawing.Size(163, 65);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Panel resolution";
@@ -177,7 +181,7 @@ namespace ZeDMD_Updater
             this.groupBox2.Controls.Add(this.BVal);
             this.groupBox2.Controls.Add(this.BSet);
             this.groupBox2.Controls.Add(this.BKeep);
-            this.groupBox2.Location = new System.Drawing.Point(190, 213);
+            this.groupBox2.Location = new System.Drawing.Point(230, 215);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(149, 44);
             this.groupBox2.TabIndex = 16;
@@ -222,7 +226,7 @@ namespace ZeDMD_Updater
             this.groupBox3.Controls.Add(this.OVal);
             this.groupBox3.Controls.Add(this.OSet);
             this.groupBox3.Controls.Add(this.OKeep);
-            this.groupBox3.Location = new System.Drawing.Point(369, 215);
+            this.groupBox3.Location = new System.Drawing.Point(445, 215);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(149, 44);
             this.groupBox3.TabIndex = 17;
@@ -265,7 +269,7 @@ namespace ZeDMD_Updater
             // LEDTest
             // 
             this.LEDTest.Enabled = false;
-            this.LEDTest.Location = new System.Drawing.Point(16, 265);
+            this.LEDTest.Location = new System.Drawing.Point(10, 284);
             this.LEDTest.Name = "LEDTest";
             this.LEDTest.Size = new System.Drawing.Size(187, 23);
             this.LEDTest.TabIndex = 18;
@@ -273,11 +277,46 @@ namespace ZeDMD_Updater
             this.LEDTest.UseVisualStyleBackColor = true;
             this.LEDTest.Click += new System.EventHandler(this.LEDTest_Click);
             // 
+            // wifi
+            // 
+            this.wifi.AutoSize = true;
+            this.wifi.Location = new System.Drawing.Point(526, 48);
+            this.wifi.Name = "wifi";
+            this.wifi.Size = new System.Drawing.Size(47, 17);
+            this.wifi.TabIndex = 19;
+            this.wifi.Text = "WiFi";
+            this.wifi.UseVisualStyleBackColor = true;
+            this.wifi.CheckedChanged += new System.EventHandler(this.wifi_CheckedChanged);
+            // 
+            // esps3
+            // 
+            this.esps3.AutoSize = true;
+            this.esps3.Location = new System.Drawing.Point(39, 42);
+            this.esps3.Name = "esps3";
+            this.esps3.Size = new System.Drawing.Size(75, 17);
+            this.esps3.TabIndex = 21;
+            this.esps3.Text = "ESP32 S3";
+            this.esps3.UseVisualStyleBackColor = true;
+            this.esps3.CheckedChanged += new System.EventHandler(this.esps3_CheckedChanged);
+            // 
+            // sevenbit
+            // 
+            this.sevenbit.AutoSize = true;
+            this.sevenbit.Location = new System.Drawing.Point(521, 73);
+            this.sevenbit.Name = "sevenbit";
+            this.sevenbit.Size = new System.Drawing.Size(74, 17);
+            this.sevenbit.TabIndex = 20;
+            this.sevenbit.Text = "7bit colors";
+            this.sevenbit.UseVisualStyleBackColor = true;
+            this.sevenbit.CheckedChanged += new System.EventHandler(this.sevenbit_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(531, 300);
+            this.ClientSize = new System.Drawing.Size(606, 328);
+            this.Controls.Add(this.sevenbit);
+            this.Controls.Add(this.wifi);
             this.Controls.Add(this.LEDTest);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -325,6 +364,9 @@ namespace ZeDMD_Updater
         private System.Windows.Forms.RadioButton OSet;
         private System.Windows.Forms.RadioButton OKeep;
         private System.Windows.Forms.Button LEDTest;
+        private System.Windows.Forms.CheckBox wifi;
+        private System.Windows.Forms.CheckBox esps3;
+        private System.Windows.Forms.CheckBox sevenbit;
     }
 }
 

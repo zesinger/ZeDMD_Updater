@@ -12,17 +12,15 @@ using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using static System.Net.WebRequestMethods;
 using System.Threading;
-using System.Runtime.CompilerServices;
-using System.Reflection;
+using System.Dynamic;
 
 namespace ZeDMD_Updater
 {
     public partial class Form1 : Form
     {
  		private const int MAJ_VERSION=1;
-        private const int MIN_VERSION=4;
+        private const int MIN_VERSION=5;
 
         public static readonly byte[] CtrlCharacters = { 0x5a, 0x65, 0x64, 0x72, 0x75, 0x6d };
         const int MAX_VERSIONS_TO_LIST=64;
@@ -48,7 +46,10 @@ namespace ZeDMD_Updater
         bool is64=false;
         bool isFlashing=false;
         ManagementEventWatcher watcher;
-        private string[] USBtoSerialDevices = { "CP210x", "CH340", "CH9102"};
+        private readonly static string[] USBtoSerialDevices = { "CP210x", "CH340", "CH9102"};
+        private readonly static string[] FirmwareFiles = { "ZeDMD-128x32.zip", "ZeDMD-256x64.zip", "ZeDMD-256x64_7bit.zip", "ZeDMD-256x64_wifi.zip", "ZeDMD-128x32_wifi.zip",
+        "ZeDMD_S3-128x32.zip","ZeDMD_S3-256x64.zip","ZeDMD_S3-128x32_wifi.zip","ZeDMD_S3-256x64_wifi.zip"};
+        private bool[] FirmwareFilesAvailable = new bool[FirmwareFiles.Length];
         private int IsZeDMD(int nocom)
         {
             for (int ti=0;ti<nZeDMDCOMs;ti++)
@@ -90,7 +91,8 @@ namespace ZeDMD_Updater
         {
             if (((ESP32List.SelectedIndex<0) && (ZeDMDList.SelectedIndex<0)) || (versionList.SelectedIndex<0))
                 { Start.Enabled=false; Start.Text=""; return; }
-            if (ESP32List.SelectedIndex>=0)
+            Start.Enabled = true; Start.Text = "Install/Update";
+            /*if (ESP32List.SelectedIndex>=0)
                  { Start.Enabled=true; Start.Text="Install"; return; }
             int versionsel=navVersions - versionList.SelectedIndex - 1;
             int zedmdsel=ZeDMDList.SelectedIndex;
@@ -99,7 +101,7 @@ namespace ZeDMD_Updater
             if ((majVersion[zedmdsel]!=avMVersion[versionsel]) || (minVersion[zedmdsel]!=avmVersion[versionsel]) || (patVersion[zedmdsel]!=avpVersion[versionsel]))
                 { Start.Enabled=true; Start.Text="Update"; return; }
             Start.Text="";
-            Start.Enabled=false;
+            Start.Enabled=false;*/
         }
         private void PopulateESP(bool settext)
         {
@@ -201,12 +203,19 @@ namespace ZeDMD_Updater
         }
         private bool IsVersionAvailable(byte majv,byte minv,byte patv)
         {
-            string URL="https://github.com/PPUC/ZeDMD/releases/download/v"+majv.ToString()+"."+minv.ToString()+"."+patv.ToString()+"/ZeDMD-128x32.zip ";
+            string URL="https://github.com/PPUC/ZeDMD/releases/download/v"+majv.ToString()+"."+minv.ToString()+"."+patv.ToString()+"/ZeDMD-128x32.zip";
             return IsUrlAvailable(URL,500);
         }
         int ValVersion(byte M, byte m, byte p)
         {
             return (int)(M << 16) + (int)(m << 8) + (int)p;
+        }
+        private void CheckPages(string url)
+        {
+            for (int i = 0;i<FirmwareFiles.Length;i++)
+            {
+                if (IsUrlAvailable(url + FirmwareFiles[i],500)) FirmwareFilesAvailable[i] = true; else FirmwareFilesAvailable[i] = false;
+            }
         }
         private void PopulateVersions()
         {
@@ -461,8 +470,12 @@ namespace ZeDMD_Updater
             ZeDMDList.Items.Add("... these boxes are updated");
             WatcherPaused=true;
             string zipFileUrl;
-            if (is64) zipFileUrl= "https://github.com/PPUC/ZeDMD/releases/download/"+strVersion+"/ZeDMD-256x64.zip";
-            else zipFileUrl="https://github.com/PPUC/ZeDMD/releases/download/"+strVersion+"/ZeDMD-128x32.zip";
+            string isS3 = "", isAdd="";
+            if (esps3.Checked) isS3 = "_S3";
+            if (wifi.Checked) isAdd = "_wifi";
+            else if (sevenbit.Checked) isAdd = "_7bit";
+            if (is64) zipFileUrl = "https://github.com/PPUC/ZeDMD/releases/download/" + strVersion + "/ZeDMD" + isS3 + "-256x64" + isAdd + ".zip";
+            else zipFileUrl = "https://github.com/PPUC/ZeDMD/releases/download/" + strVersion + "/ZeDMD" + isS3 + "-128x32" + isAdd + ".zip";
             string firmwareFileName = "ZeDMD.bin";
 
             using (WebClient client = new WebClient())
@@ -540,6 +553,7 @@ namespace ZeDMD_Updater
                 is64=false;
                 UpdateStartButton();
             }
+            UpdateOptions();
         }
 
         private void HD_CheckedChanged(object sender, EventArgs e)
@@ -549,10 +563,48 @@ namespace ZeDMD_Updater
                 is64=true;
                 UpdateStartButton();
             }
+            UpdateOptions();
         }
-
+        private int GetIndex(string url)
+        {
+            for (int i=0;i<FirmwareFiles.Length;i++)
+            {
+                if (FirmwareFiles[i] == url) return i;
+            }
+            return 0;
+        }
+        private void UpdateOptions()
+        {
+            string strHD = "128x32", strS3="";
+            if (HD.Checked) strHD = "256x64";
+            else
+            {
+                sevenbit.Checked = false;
+                sevenbit.Enabled = false;
+            }
+            if (esps3.Checked) strS3 = "_S3";
+            if (strHD == "256x64")
+            {
+                if (FirmwareFilesAvailable[GetIndex("ZeDMD" + strS3 + "-" + strHD + "_7bit.zip")]) sevenbit.Enabled = true;
+                else
+                {
+                    sevenbit.Checked = false;
+                    sevenbit.Enabled = false;
+                }
+            }
+            if (FirmwareFilesAvailable[GetIndex("ZeDMD" + strS3 + "-" + strHD + "_wifi.zip")]) wifi.Enabled = true; else wifi.Enabled = false;
+        }
         private void versionList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            esps3.Checked = false;
+            wifi.Checked = false;
+            sevenbit.Checked = false;
+            CheckPages("https://github.com/PPUC/ZeDMD/releases/download/" + versionList.Text + "/");
+            for (int i = 0; i < FirmwareFiles.Length;i++)
+            {
+                if (FirmwareFilesAvailable[i] == true && FirmwareFiles[i].Contains("_S3")) esps3.Enabled = true; else esps3.Enabled = false;
+            }
+            UpdateOptions();
             UpdateStartButton();
         }
 
@@ -607,6 +659,21 @@ namespace ZeDMD_Updater
                 Thread.Sleep(3000);
             }
             EnableAll();
+        }
+
+        private void esps3_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateOptions();
+        }
+
+        private void sevenbit_CheckedChanged(object sender, EventArgs e)
+        {
+            wifi.Checked = false;
+        }
+
+        private void wifi_CheckedChanged(object sender, EventArgs e)
+        {
+            sevenbit.Checked = false;
         }
     }
 }
